@@ -6,8 +6,10 @@
 #include <fstream>
 #include <vector>
 #include <memory>
+#include <map>
 
-struct Book {
+struct Book
+{
     int index;
     std::string ISBN_{""};
     std::string bookname_{""};
@@ -17,7 +19,8 @@ struct Book {
     double price_{0};
 };
 
-class BookManager {
+class BookManager
+{
   private:
     std::fstream bookFile; // index->Book
     std::string bookfile_name; //文件路径
@@ -27,6 +30,8 @@ class BookManager {
     BlockLinkedList<60> BookName_bookList{"../file/BookName_book_blocklinkedlist", "../file/BookName_book_blocklinkedlist_basicinformation"}; // BookName->index
     BlockLinkedList<60> Author_bookList{"../file/Author_book_blocklinkedlist", "../file/Author_book_blocklinedlist_basicinformation"}; // Author->index
     BlockLinkedList<60> Keyword_bookList{"../file/Keyword_book_blocklinkedlist", "../file/Keyword_book_blocklinkedlist_basicinformation"}; // Keyword->index
+    std::map<std::string, int> sorted_index;
+    
   public:
     BookManager();
     ~BookManager();

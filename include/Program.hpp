@@ -25,7 +25,8 @@ enum Token
     ALL
 };
 
-class Program {
+class Program
+{
 private:
     std::fstream totalFile;
     AccountManager accountmanager_;

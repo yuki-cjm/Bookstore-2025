@@ -3,7 +3,8 @@
 #include <string>
 #include <fstream>
 
-class LogManager {
+class LogManager
+{
   private:
     std::fstream transactionLogFile;      // 交易日志文件路径
     std::fstream operationLogFile;        // 操作日志文件路径

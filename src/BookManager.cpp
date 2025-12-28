@@ -5,8 +5,8 @@
 #include <fstream>
 #include <vector>
 #include <memory>
-#include <optional>
 #include <iomanip>
+#include <map>
 
 BookManager::BookManager()
 {
@@ -19,6 +19,7 @@ BookManager::BookManager()
         bookFile.open(bookfile_name, std::ios::in | std::ios::out | std::ios::binary);
     }
     total_book = 0;
+    sorted_index.clear();
 }
 
 BookManager::~BookManager()
@@ -137,13 +138,17 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
         bookFile.read(temp, 21);
         std::string isbn_ = std::string(temp);
         if(!isbn_.empty())
+        {
+            sorted_index.erase(isbn_);
             ISBN_bookList.Delete(isbn_, index);
+        }
         bookFile.clear();
         bookFile.seekp(Booksize * index);
         memset(temp, 0, 21);
         strncpy(temp, isbn.c_str(), 20);
         temp[20] = '\0';
         bookFile.write(temp, 21);
+        sorted_index.insert({isbn, index});
         ISBN_bookList.Insert(isbn, index);
     }
     if(!bookname.empty())
@@ -236,6 +241,7 @@ int BookManager::addBook(const std::string &isbn)
     bookFile.write(reinterpret_cast<char*>(&quantity), 4);
     double price = 0;
     bookFile.write(reinterpret_cast<char*>(&price), 8);
+    sorted_index.insert({isbn, total_book});
     ISBN_bookList.Insert(isbn, total_book);
     total_book++;
     return total_book - 1;
@@ -251,6 +257,6 @@ void BookManager::printall()
 {
     if(total_book == 0)
         std::cout << '\n';
-    for(int index = 0; index < total_book; index++)
-        printBook(index);
+    for(auto it = sorted_index.begin(); it != sorted_index.end(); it++)
+        printBook(it->second);
 }

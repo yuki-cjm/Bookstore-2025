@@ -4,7 +4,8 @@
 
 class Program;
 
-class Parser {
+class Parser
+{
   public:
     void parseLine(const std::string &line, Program *program);
 
