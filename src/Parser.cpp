@@ -131,7 +131,7 @@ void Parser::parseLine(const std::string &line, Program *program)
     else if(order == "import")   parseImport  (pointer, line, program);
     else if(order == "log")      parseLog     (pointer, line, program);
     else if(order == "report")   parseReport  (pointer, line, program);
-    else throw BookstoreError("Invalid");
+    else if(!order.empty())      throw BookstoreError("Invalid");
 }
 
 void Parser::parseQuit(int &pointer, const std::string &line, Program *program)
