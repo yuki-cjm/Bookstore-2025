@@ -102,7 +102,7 @@ void LogManager::showTransaction(int count)
         transactionLogFile.read(reinterpret_cast<char*>(&temp_expenditure), 8);
     }
     if(count > total_transactionlog)
-        throw BookstoreError("invalid");
+        throw BookstoreError("Invalid");
     double income = 0, expenditure = 0;
     if(count == -1)
     {

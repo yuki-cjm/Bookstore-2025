@@ -248,9 +248,13 @@ void Program::Select(const std::string &isbn)
     {
         index = bookmanager_.addBook(isbn);
         book_index_now = index;
+        loginStack.back()->book_index = index;
     }
     else
+    {
         book_index_now = index;
+        loginStack.back()->book_index = index;
+    }
 }
 
 void Program::Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price)
