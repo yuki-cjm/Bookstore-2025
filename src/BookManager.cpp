@@ -144,7 +144,7 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
         strncpy(temp, isbn.c_str(), 20);
         temp[20] = '\0';
         bookFile.write(temp, 21);
-        ISBN_bookList.Insert(isbn_, index);
+        ISBN_bookList.Insert(isbn, index);
     }
     if(!bookname.empty())
     {
@@ -173,7 +173,7 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
         bookFile.clear();
         bookFile.seekp(Booksize * index + 82);
         memset(temp, 0, 61);
-        strncpy(temp, bookname.c_str(), 60);
+        strncpy(temp, author.c_str(), 60);
         temp[60] = '\0';
         bookFile.write(temp, 61);
         Author_bookList.Insert(author, index);
@@ -201,14 +201,17 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
         bookFile.clear();
         bookFile.seekp(Booksize * index + 143);
         memset(temp, 0, 61);
-        strncpy(temp, bookname.c_str(), 60);
+        strncpy(temp, keyword.c_str(), 60);
         temp[60] = '\0';
         bookFile.write(temp, 61);
         for(auto &&element : keywords)
             Keyword_bookList.Insert(element,  index);
     }
-    bookFile.seekp(Booksize * index + 204);
-    bookFile.write(reinterpret_cast<char*>(&price), 8);
+    if(price > 1e-6)
+    {
+        bookFile.seekp(Booksize * index + 208);
+        bookFile.write(reinterpret_cast<char*>(&price), 8);
+    }
 }
 
 int BookManager::addBook(const std::string &isbn)
@@ -233,6 +236,7 @@ int BookManager::addBook(const std::string &isbn)
     bookFile.write(reinterpret_cast<char*>(&quantity), 4);
     double price = 0;
     bookFile.write(reinterpret_cast<char*>(&price), 8);
+    ISBN_bookList.Insert(isbn, total_book);
     total_book++;
     return total_book - 1;
 }
@@ -240,7 +244,7 @@ int BookManager::addBook(const std::string &isbn)
 void BookManager::printBook(int index)
 {
     std::shared_ptr<Book> book = getBook(index);
-    std::cout << book->ISBN_ << '\t' << book->bookname_ << '\t' << book->author_ << '\t' << book->keyword_ << '\t' << std::fixed << std::setprecision(2) << book->price_ << '\n';
+    std::cout << book->ISBN_ << '\t' << book->bookname_ << '\t' << book->author_ << '\t' << book->keyword_ << '\t' << std::fixed << std::setprecision(2) << book->price_ << '\t' << book->quantity_ << '\n';
 }
 
 void BookManager::printall()

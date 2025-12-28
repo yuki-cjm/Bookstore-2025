@@ -4,6 +4,7 @@
 #include <fstream>
 #include <algorithm>
 #include <iomanip>
+#include <filesystem>
 
 #include "utils/Error.hpp"
 #include "AccountManager.hpp"
@@ -12,6 +13,7 @@
 #include "Program.hpp"
 
 #include <cmath>
+#include <iostream>
 #include <string>
 
 Program::Program()
@@ -33,7 +35,7 @@ Program::Program()
     std::string userid = "root";
     std::string password = "sjtu";
     std::string username = "caojiaming";
-    Useradd(userid, password, 7, username);
+    accountmanager_.addAccount(userid, password, 7, username);
 }
 
 Program::~Program()
@@ -41,6 +43,7 @@ Program::~Program()
     bookmanager_.recordBookManager(totalFile);
     accountmanager_.recordAccountManager(totalFile);
     totalFile.close();
+    std::filesystem::remove_all("../file");
 }
 
 void Program::sortBook(std::vector<int> &index)
@@ -57,6 +60,15 @@ void Program::sortBook(std::vector<int> &index)
                 std::swap(isbn[i], isbn[j]);
                 std::swap(index[i], index[j]);
             }
+}
+
+void Program::printloginStack()
+{
+    std::cout << "loginstack:" << std::endl;
+    for(int i = 0; i < loginStack.size(); i++)
+        loginStack[i]->printAccount();
+    if(loginStack.size() == 0)
+        std::cout << "empty" << std::endl;
 }
 
 void Program::execute(const std::string &line)
@@ -79,17 +91,18 @@ void Program::Su(const std::string &userid, const std::string &password)
     std::shared_ptr<Account> account = accountmanager_.getAccount(userid);
     if(!account)
         throw BookstoreError("Invalid");
-    if(!password.empty() && password != account->password_)
+    if(!password.empty())
         if(password == account->password_)
             loginStack.push_back(account);
         else
             throw BookstoreError("Invalid");
     else
-        if(loginStack.back()->privilege_ > account->privilege_)
+        if(loginStack.size() != 0 && loginStack.back()->privilege_ > account->privilege_)
             loginStack.push_back(account);
         else
             throw BookstoreError("Invalid");
     book_index_now = -1;
+    // printloginStack();
 }
 
 void Program::Logout()
@@ -101,22 +114,25 @@ void Program::Logout()
         book_index_now = -1;
     else
         book_index_now = loginStack.back()->book_index;
+    // printloginStack();
 }
 
 void Program::Register(const std::string &userid, const std::string &password, const std::string &username)
 {
-    if(accountmanager_.findAccount(userid))
+    if(accountmanager_.findAccount(userid) != -1)
         throw BookstoreError("Invalid");
     accountmanager_.addAccount(userid, password, 1, username);
 }
 
 void Program::Passwd(const std::string &userid, const std::string &password1, const std::string &password2)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
     std::shared_ptr<Account> account = accountmanager_.getAccount(userid);
     if(!account)
         throw BookstoreError("Invalid");
     if(password2.empty())
-        if(account->privilege_ == 7)
+        if(loginStack.back()->privilege_ == 7)
             accountmanager_.changePassword(account->index, password1);
         else
             throw BookstoreError("Invalid");
@@ -129,17 +145,25 @@ void Program::Passwd(const std::string &userid, const std::string &password1, co
 
 void Program::Useradd(const std::string &userid, const std::string &password, int privilege, const std::string &username)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
+    if(loginStack.back()->privilege_ < 3)
+        throw BookstoreError("Invalid");
     if(privilege >= loginStack.back()->privilege_)
         throw BookstoreError("Invalid");
-    if(accountmanager_.findAccount(userid))
+    if(accountmanager_.findAccount(userid) != -1)
         throw BookstoreError("Invalid");
-    accountmanager_.addAccount(userid, password, 1, username);
+    accountmanager_.addAccount(userid, password, privilege, username);
 }
 
 void Program::Delete(const std::string &userid)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
+    if(loginStack.back()->privilege_ < 7)
+        throw BookstoreError("Invalid");
     int index = accountmanager_.findAccount(userid);
-    if(!index)
+    if(index == -1)
         throw BookstoreError("Invalid");
     //This can be optimized.
     for(std::shared_ptr<Account> account : loginStack)
@@ -150,6 +174,8 @@ void Program::Delete(const std::string &userid)
 
 void Program::Show(Token type, const std::string &content)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
     switch(type)
     {
         case Token::ISBN: {
@@ -193,6 +219,8 @@ void Program::Show(Token type, const std::string &content)
 
 void Program::Buy(const std::string &isbn, int quantity)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
     int index = bookmanager_.findBook(isbn);
     if(index == -1)
         throw BookstoreError("Invalid");
@@ -206,6 +234,10 @@ void Program::Buy(const std::string &isbn, int quantity)
 
 void Program::Select(const std::string &isbn)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
+    if(loginStack.back()->privilege_ < 3)
+        throw BookstoreError("Invalid");
     int index = bookmanager_.findBook(isbn);
     if(index == -1)
     {
@@ -218,12 +250,20 @@ void Program::Select(const std::string &isbn)
 
 void Program::Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
+    if(loginStack.back()->privilege_ < 3)
+        throw BookstoreError("Invalid");
     bookmanager_.modify(book_index_now, isbn, bookname, author, keyword, keywords, price);
 }
 
 void Program::Import(int quantity, double totalcost)
 {
-    if(book_index_now = -1)
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
+    if(loginStack.back()->privilege_ < 3)
+        throw BookstoreError("Invalid");
+    if(book_index_now == -1)
         throw BookstoreError("Invalid");
     bookmanager_.changeQuantity(book_index_now, quantity);
     logmanager_.addTransactionLog(-totalcost);
@@ -231,5 +271,9 @@ void Program::Import(int quantity, double totalcost)
 
 void Program::ShowFinance(int count)
 {
+    if(loginStack.empty())
+        throw BookstoreError("Invalid");
+    if(loginStack.back()->privilege_ < 7)
+        throw BookstoreError("Invalid");
     logmanager_.showTransaction(count);
 }

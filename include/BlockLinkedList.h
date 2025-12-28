@@ -310,18 +310,35 @@ class BlockLinkedList
 
     void Insert(const std::string &index, int value)
     {
-        if(countBlock == 0)
+        if(countBlock == 0 || countBlock == deletedBlock.size())
         {
-            Block newblock;
-            newblock.index[0] = index;
-            newblock.value[0] = value;
-            blockmax_index.push_back(index);
-            blockmax_value.push_back(value);
-            last.push_back(-1);
-            next.push_back(-1);
-            count.push_back(1);
-            addBlock(newblock, -1, 0);
-            countBlock++;
+            if(deletedBlock.size() == 0)
+            {
+                Block newblock;
+                newblock.index[0] = index;
+                newblock.value[0] = value;
+                blockmax_index.push_back(index);
+                blockmax_value.push_back(value);
+                last.push_back(-1);
+                next.push_back(-1);
+                count.push_back(1);
+                addBlock(newblock, -1, 0);
+                countBlock++;
+            }
+            else
+            {
+                int Blockindex = deletedBlock.back();
+                deletedBlock.pop_back();
+                Block newblock;
+                newblock.index[0] = index;
+                newblock.value[0] = value;
+                blockmax_index[Blockindex] = index;
+                blockmax_value[Blockindex] = value;
+                last[Blockindex] = -1;
+                next[Blockindex] = -1;
+                count[Blockindex] = 1;
+                addBlock(newblock, -1, Blockindex);
+            }
         }
         else
         {
@@ -461,7 +478,6 @@ class BlockLinkedList
             while(block.index[l] == index && l < count[current])
             {
                 findit = true;
-                std::cout << block.value[l] << ' ';
                 answer.push_back(block.value[l]);
                 l++;
             }
@@ -477,7 +493,7 @@ class BlockLinkedList
     void printblocklinkedlist()
     {
         std::cout << std::endl << "Situation now:" << std::endl;
-        if(countBlock == 0)
+        if(countBlock == 0 || countBlock == deletedBlock.size())
         {
             std::cout << "The blocklinkedlist is empty" << std::endl;
             std::cout << std::endl;

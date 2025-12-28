@@ -19,7 +19,5 @@ testcases/
 scripts/
 draft
 CMakeLists.txt
-build/CMakeFiles/
-build/cmake_install.cmake
-build/CMakeCache.txt
-build/Makefile
+build/
+!build/code

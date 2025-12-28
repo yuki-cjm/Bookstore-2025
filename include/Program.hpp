@@ -38,6 +38,7 @@ private:
     bool programEnd_;
 
     void sortBook(std::vector<int> &index);
+    void printloginStack();
 public:
     Program();
     ~Program();

@@ -8,6 +8,11 @@
 #include "BlockLinkedList.h"
 #include "AccountManager.hpp"
 
+void Account::printAccount()
+{
+    std::cout << "index:" << index << " username:" << username_ << " userid:" << userID_ << " password:" << password_ << " privilege:" << privilege_ << " book: " << book_index << std::endl;
+}
+
 AccountManager::AccountManager()
 {
     accountfile_name = "../file/AccountFile";
@@ -56,11 +61,13 @@ void AccountManager::recordAccountManager(std::fstream &totalFile)
 int AccountManager::findAccount(const std::string &userid)
 {
     std::vector<int> list = std::move(accountList.Find(userid));
-    if(list.size() != 1)
+    if(list.size() > 1)
         throw BookstoreError("Invalid");
+    if(list.size() == 0)
+        return -1;
     for(int index : deleted_account)
         if(index == list[0])
-            throw BookstoreError("Invalid");
+            return -1;
     return list[0];
 }
 
@@ -86,6 +93,8 @@ std::shared_ptr<Account> AccountManager::getAccount(int index)
 std::shared_ptr<Account> AccountManager::getAccount(const std::string &userid)
 {
     int index = findAccount(userid);
+    if(index == -1)
+        return nullptr;
     return getAccount(index);
 }
 

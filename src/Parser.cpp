@@ -1,3 +1,4 @@
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -43,7 +44,7 @@ int stringtoint(const std::string &quantity)
 double stringtodouble(const std::string &price)
 {
     double number{};
-    int point, count = 1;
+    int point = 0, count = 1;
     for(int i = 0; i < price.length(); i++)
         if(price[i] == '.')
         {
@@ -77,26 +78,27 @@ double stringtodouble(const std::string &price)
 //type = 8表示获取的是Price, TotalCost
 std::string getword(int &pointer, const std::string &line, int type = 0)
 {
-    std::string temp{};
+    std::string temp{""};
     // 去除前导空格
     while(std::isspace(static_cast<int>(line[pointer])) && pointer < line.length())
         pointer++;
 
     // 获得第一个单词
-    do {
+    while(line[pointer] != ' ' && pointer < line.length())
+    {
         char c = line[pointer];
         if(type == 1 && !(c >= 'a' && c <='z' || c >= 'A' && c <= 'Z' || c >= '0' && c <= '9' || c == '_')
-        || type == 2 && isvisibleletter(c)
+        || type == 2 && !isvisibleletter(c)
         || type == 3 && !(c >= '0' && c <= '9')
-        || type == 4 && isvisibleletter(c)
-        || type == 5 && (isvisibleletter(c) || c == '"')
-        || type == 6 && (isvisibleletter(c) || c == '"')
+        || type == 4 && !isvisibleletter(c)
+        || type == 5 && (!isvisibleletter(c) || c == '"')
+        || type == 6 && (!isvisibleletter(c) || c == '"')
         || type == 7 && !(c >= '0' && c <= '9')
         || type == 8 && !(c >= '0' && c <= '9' || c == '.'))
             throw BookstoreError("Invalid");
         temp.push_back(line[pointer]);
         pointer++;
-    } while(line[pointer] != ' ' && pointer < line.length());
+    }
     if(type == 1 && temp.length() > 30
     || type == 2 && temp.length() > 30
     || type == 3 && temp.length() > 1
@@ -174,6 +176,8 @@ void Parser::parseRegister(int &pointer, const std::string &line, Program *progr
     std::string UserID = getword(pointer, line, 1);
     std::string Password = getword(pointer, line, 1);
     std::string Username = getword(pointer, line, 2);
+    if(Username.empty())
+        throw BookstoreError("Invalid");
     std::string str = getword(pointer, line);
     if(str.empty())
         program->Register(UserID, Password, Username);
@@ -188,7 +192,7 @@ void Parser::parsePasswd(int &pointer, const std::string &line, Program *program
     std::string Password2 = getword(pointer, line, 1);
     std::string str = getword(pointer, line);
     if(str.empty())
-        program->Register(UserID, Password1, Password2);
+        program->Passwd(UserID, Password1, Password2);
     else 
         throw BookstoreError("Invalid");
 }
@@ -324,7 +328,7 @@ void Parser::parseModify(int &pointer, const std::string &line, Program *program
     std::string keyword{};
     std::vector<std::string> keywords{};
     std::string author;
-    double price;
+    double price{0};
     std::string str;
     bool getprice = false;
     while(1)
@@ -349,7 +353,7 @@ void Parser::parseModify(int &pointer, const std::string &line, Program *program
         {
             if(!isbn.empty())
                 throw BookstoreError("Invalid");
-            type = getword(p, type, 4);
+            type = getword(p, str, 4);
             if(type.empty())
                 throw BookstoreError("Invalid");
             isbn = type;
