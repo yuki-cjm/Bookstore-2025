@@ -9,10 +9,10 @@
 
 int main()
 {
-    freopen("../testcases/BasicTestCase-5/5.in", "r", stdin);
+    freopen("../testcases/BasicTestCase-7/9.in", "r", stdin);
     freopen("../BookStore.out", "w", stdout);
 
-    std::filesystem::create_directory("../file");
+    // std::filesystem::create_directory("../file");
     Program program; 
     std::string line;
     while(program.programRun() && std::getline(std::cin, line))

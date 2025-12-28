@@ -21,6 +21,9 @@ class LogManager
     LogManager();
     ~LogManager();
 
+    int setLogManager(std::fstream &totalFile, int point);
+    int recordLogManager(std::fstream &totalFile, int point);
+
     void addTransactionLog(double finance);
     void showTransaction(int count);
 };

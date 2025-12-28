@@ -33,8 +33,8 @@ class AccountManager {
     AccountManager();
     ~AccountManager();
 
-    void setAccountManager(std::fstream &totalFile);
-    void recordAccountManager(std::fstream &totalFile);
+    int setAccountManager(std::fstream &totalFile, int point);
+    int recordAccountManager(std::fstream &totalFile, int point);
 
     int findAccount(const std::string &userid);//返回index
     std::shared_ptr<Account> getAccount(int index);

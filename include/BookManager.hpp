@@ -30,14 +30,14 @@ class BookManager
     BlockLinkedList<60> BookName_bookList{"../file/BookName_book_blocklinkedlist", "../file/BookName_book_blocklinkedlist_basicinformation"}; // BookName->index
     BlockLinkedList<60> Author_bookList{"../file/Author_book_blocklinkedlist", "../file/Author_book_blocklinedlist_basicinformation"}; // Author->index
     BlockLinkedList<60> Keyword_bookList{"../file/Keyword_book_blocklinkedlist", "../file/Keyword_book_blocklinkedlist_basicinformation"}; // Keyword->index
-    std::map<std::string, int> sorted_index;
+    std::map<std::string, int> sorted_index; // isbn->index, sorted by isbn
     
   public:
     BookManager();
     ~BookManager();
 
-    void setBookManager(std::fstream &totalFile);
-    void recordBookManager(std::fstream &totalFile);
+    int setBookManager(std::fstream &totalFile, int point);
+    int recordBookManager(std::fstream &totalFile, int point);
 
     std::vector<int> findBookName(const std::string &bookname);
     std::vector<int> findAuthor(const std::string &author);

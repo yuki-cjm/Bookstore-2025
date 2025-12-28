@@ -33,10 +33,10 @@ AccountManager::~AccountManager()
     accountFile.close();
 }
 
-void AccountManager::setAccountManager(std::fstream &totalFile)
+int AccountManager::setAccountManager(std::fstream &totalFile, int point)
 {
     totalFile.clear();
-    totalFile.seekg(4);
+    totalFile.seekg(point);
     totalFile.read(reinterpret_cast<char*>(&total_account), 4);
     totalFile.read(reinterpret_cast<char*>(&count_deleted_account), 4);
     int index;
@@ -46,16 +46,18 @@ void AccountManager::setAccountManager(std::fstream &totalFile)
         totalFile.read(reinterpret_cast<char*>(&index), 4);
         deleted_account.push_back(index);
     }
+    return 8 + 4 * count_deleted_account;
 }
 
-void AccountManager::recordAccountManager(std::fstream &totalFile)
+int AccountManager::recordAccountManager(std::fstream &totalFile, int point)
 {
     totalFile.clear();
-    totalFile.seekp(4);
+    totalFile.seekp(point);
     totalFile.write(reinterpret_cast<char*>(&total_account), 4);
     totalFile.write(reinterpret_cast<char*>(&count_deleted_account), 4);
     for(int i = 0; i < count_deleted_account; i++)
         totalFile.write(reinterpret_cast<char*>(&deleted_account[i]), 4);
+    return 8 + 4 * count_deleted_account;
 }
 
 int AccountManager::findAccount(const std::string &userid)

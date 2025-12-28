@@ -25,25 +25,29 @@ Program::Program()
         totalFile.open("../file/totalFile", std::ios::out | std::ios::binary);
         totalFile.close();
         totalFile.open("../file/totalFile", std::ios::in | std::ios::out | std::ios::binary);
+        std::string userid = "root";
+        std::string password = "sjtu";
+        std::string username = "caojiaming";
+        accountmanager_.addAccount(userid, password, 7, username);
     }
     else
     {
-        bookmanager_.setBookManager(totalFile);
-        accountmanager_.setAccountManager(totalFile);
+        int point = 0;
+        point += accountmanager_.setAccountManager(totalFile, point);
+        point += bookmanager_.setBookManager(totalFile, point);
+        point += logmanager_.setLogManager(totalFile, point);
     }
     book_index_now = -1;
-    std::string userid = "root";
-    std::string password = "sjtu";
-    std::string username = "caojiaming";
-    accountmanager_.addAccount(userid, password, 7, username);
 }
 
 Program::~Program()
 {
-    bookmanager_.recordBookManager(totalFile);
-    accountmanager_.recordAccountManager(totalFile);
+    int point = 0;
+    point += accountmanager_.recordAccountManager(totalFile, point);
+    point += bookmanager_.recordBookManager(totalFile, point);
+    point += logmanager_.recordLogManager(totalFile, point);
     totalFile.close();
-    std::filesystem::remove_all("../file");
+    // std::filesystem::remove_all("../file");
 }
 
 void Program::sortBook(std::vector<int> &index)
@@ -253,6 +257,8 @@ void Program::Modify(const std::string &isbn, const std::string &bookname, const
     if(loginStack.empty())
         throw BookstoreError("Invalid");
     if(loginStack.back()->privilege_ < 3)
+        throw BookstoreError("Invalid");
+    if(book_index_now == -1)
         throw BookstoreError("Invalid");
     bookmanager_.modify(book_index_now, isbn, bookname, author, keyword, keywords, price);
 }

@@ -27,18 +27,42 @@ BookManager::~BookManager()
     bookFile.close();
 }
 
-void BookManager::setBookManager(std::fstream &totalFile)
+int BookManager::setBookManager(std::fstream &totalFile, int point)
 {
     totalFile.clear();
-    totalFile.seekg(0);
+    totalFile.seekg(point);
     totalFile.read(reinterpret_cast<char*>(&total_book), 4);
+    int count_sorted_index, index;
+    char temp[21];
+    std::string isbn;
+    totalFile.read(reinterpret_cast<char*>(&count_sorted_index), 4);
+    for(int i = 0 ;i < count_sorted_index; i++)
+    {
+        totalFile.read(temp, 21);
+        isbn = std::string(temp);
+        totalFile.read(reinterpret_cast<char*>(&index), 4);
+        sorted_index.insert({isbn, index});
+    }
+    return 8 + 25 * count_sorted_index;
 }
 
-void BookManager::recordBookManager(std::fstream &totalFile)
+int BookManager::recordBookManager(std::fstream &totalFile, int point)
 {
     totalFile.clear();
-    totalFile.seekp(0);
+    totalFile.seekp(point);
     totalFile.write(reinterpret_cast<char*>(&total_book), 4);
+    int count_sorted_index = sorted_index.size();
+    char temp[21];
+    totalFile.write(reinterpret_cast<char*>(&count_sorted_index), 4);
+    for(auto it = sorted_index.begin(); it != sorted_index.end(); it++)
+    {
+        memset(temp, 0, 21);
+        strncpy(temp, (it->first).c_str(), 20);
+        temp[20] = '\0';
+        totalFile.write(temp, 21);
+        totalFile.write(reinterpret_cast<char*>(&(it->second)), 4);
+    }
+    return 8 + 25 * count_sorted_index;
 }
 
 std::vector<int> BookManager::findBookName(const std::string &bookname)
@@ -133,6 +157,8 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
     bookFile.clear();
     if(!isbn.empty())
     {
+        if(sorted_index.find(isbn) != sorted_index.end())
+            throw BookstoreError("Invalid");
         char temp[21];
         bookFile.seekg(Booksize * index);
         bookFile.read(temp, 21);
@@ -198,8 +224,13 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
                 if(tmp.empty())
                     throw BookstoreError("Invalid");
                 else
+                {
                     keywords_.push_back(tmp);
+                    tmp = "";
+                }
             }
+            else
+                tmp.push_back(keyword_[i]);
         keywords_.push_back(tmp);
         for(auto &&element : keywords_)
             Keyword_bookList.Delete(element, index);
@@ -255,7 +286,7 @@ void BookManager::printBook(int index)
 
 void BookManager::printall()
 {
-    if(total_book == 0)
+    if(sorted_index.size() == 0)
         std::cout << '\n';
     for(auto it = sorted_index.begin(); it != sorted_index.end(); it++)
         printBook(it->second);

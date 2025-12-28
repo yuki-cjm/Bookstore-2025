@@ -15,14 +15,21 @@ LogManager::LogManager()
         transactionLogFile.open("../file/transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
     }
     operationLogFile.open("../file/operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
-    if(!transactionLogFile)
+    if(!operationLogFile)
     {
         operationLogFile.open("../file/operationLogFile", std::ios::out | std::ios::binary);
         operationLogFile.close();
         operationLogFile.open("../file/operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
     }
-    employeeReportFile.open("../file/transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
-    if(!transactionLogFile)
+    financeReportFile.open("../file/financeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+    if(!financeReportFile)
+    {
+        financeReportFile.open("../file/financeReportFile", std::ios::out | std::ios::binary);
+        financeReportFile.close();
+        financeReportFile.open("../file/financeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+    }
+    employeeReportFile.open("../file/employeeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+    if(!employeeReportFile)
     {
         employeeReportFile.open("../file/employeeReportFile", std::ios::out | std::ios::binary);
         employeeReportFile.close();
@@ -30,6 +37,7 @@ LogManager::LogManager()
     }
     total_transactionlog = 0;
     total_operationlog = 0;
+    total_financelog = 0;
     total_employeelog = 0;
 }
 
@@ -38,6 +46,28 @@ LogManager::~LogManager()
     transactionLogFile.close();
     operationLogFile.close();
     employeeReportFile.close();
+}
+
+int LogManager::setLogManager(std::fstream &totalFile, int point)
+{
+    totalFile.clear();
+    totalFile.seekg(point);
+    totalFile.read(reinterpret_cast<char*>(&total_transactionlog), 4);
+    totalFile.read(reinterpret_cast<char*>(&total_operationlog), 4);
+    totalFile.read(reinterpret_cast<char*>(&total_financelog), 4);
+    totalFile.read(reinterpret_cast<char*>(&total_employeelog), 4);
+    return 16;
+}
+
+int LogManager::recordLogManager(std::fstream &totalFile, int point)
+{
+    totalFile.clear();
+    totalFile.seekp(point);
+    totalFile.write(reinterpret_cast<char*>(&total_transactionlog), 4);
+    totalFile.write(reinterpret_cast<char*>(&total_operationlog), 4);
+    totalFile.write(reinterpret_cast<char*>(&total_financelog), 4);
+    totalFile.write(reinterpret_cast<char*>(&total_employeelog), 4);
+    return 16;
 }
 
 void LogManager::addTransactionLog(double finance)
