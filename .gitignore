@@ -18,6 +18,5 @@ FileStorageTestForBookstore2025
 testcases/
 scripts/
 draft
-CMakeLists.txt
 build/
 !build/code
