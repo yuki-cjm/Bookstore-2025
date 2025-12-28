@@ -5,6 +5,7 @@
 #include <algorithm>
 #include <iomanip>
 #include <filesystem>
+#include <cmath>
 
 #include "utils/Error.hpp"
 #include "AccountManager.hpp"
@@ -12,9 +13,7 @@
 #include "LogManager.hpp"
 #include "Program.hpp"
 
-#include <cmath>
-#include <iostream>
-#include <string>
+
 
 Program::Program()
 {
@@ -110,13 +109,10 @@ void Program::Su(const std::string &userid, const std::string &password)
 
 void Program::Logout()
 {
-    if(loginStack.empty())
+    if(loginStack.empty() || loginStack.back()->privilege_ < 1)
         throw BookstoreError("Invalid");
     loginStack.pop_back();
-    if(loginStack.empty())
-        book_index_now = -1;
-    else
-        book_index_now = loginStack.back()->book_index;
+    book_index_now = loginStack.back()->book_index;
     // printloginStack();
 }
 
@@ -129,7 +125,7 @@ void Program::Register(const std::string &userid, const std::string &password, c
 
 void Program::Passwd(const std::string &userid, const std::string &password1, const std::string &password2)
 {
-    if(loginStack.empty())
+    if(loginStack.empty() || loginStack.back()->privilege_ < 1)
         throw BookstoreError("Invalid");
     std::shared_ptr<Account> account = accountmanager_.getAccount(userid);
     if(!account)
@@ -179,7 +175,7 @@ void Program::Delete(const std::string &userid)
 
 void Program::Show(Token type, const std::string &content)
 {
-    if(loginStack.empty())
+    if(loginStack.empty() || loginStack.back()->privilege_ < 1)
         throw BookstoreError("Invalid");
     switch(type)
     {
@@ -224,7 +220,7 @@ void Program::Show(Token type, const std::string &content)
 
 void Program::Buy(const std::string &isbn, int quantity)
 {
-    if(loginStack.empty())
+    if(loginStack.empty() || loginStack.back()->privilege_ < 1)
         throw BookstoreError("Invalid");
     int index = bookmanager_.findBook(isbn);
     if(index == -1)
