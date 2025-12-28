@@ -1,3 +1,25 @@
-.vscode
+.vscode/
 MemoryRiver Easy.hpp
 BookStore/
+README.md
+Bonus.md
+标准要求.md
+业务要求.md
+.gitignore
+*.in
+*.out
+*.exe
+bookstore_app
+blocklinkedlist
+basicinformation
+file/
+FileStorageTestForBookstore2025.cpp
+FileStorageTestForBookstore2025
+testcases/
+scripts/
+draft
+CMakeLists.txt
+build/CMakeFiles/
+build/cmake_install.cmake
+build/CMakeCache.txt
+build/Makefile

@@ -1,0 +1,53 @@
+#pragma once
+
+#include "BlockLinkedList.h"
+
+#include <string>
+#include <fstream>
+#include <vector>
+#include <memory>
+
+struct Book {
+    int index;
+    std::string ISBN_{""};
+    std::string bookname_{""};
+    std::string author_{""};
+    std::string keyword_{""};
+    int quantity_{0};
+    double price_{0};
+};
+
+class BookManager {
+  private:
+    std::fstream bookFile; // index->Book
+    std::string bookfile_name; //文件路径
+    int total_book;
+    static const int Booksize = 216;
+    BlockLinkedList<20> ISBN_bookList{"../file/ISBN_book_blocklinkedlist", "file/ISBN_book_blocklinkedlist_basicinformation"}; // ISBN->index
+    BlockLinkedList<60> BookName_bookList{"../file/BookName_book_blocklinkedlist", "file/BookName_book_blocklinkedlist_basicinformation"}; // BookName->index
+    BlockLinkedList<60> Author_bookList{"../file/Author_book_blocklinkedlist", "file/Author_book_blocklinedlist_basicinformation"}; // Author->index
+    BlockLinkedList<60> Keyword_bookList{"../file/Keyword_book_blocklinkedlist", "file/Keyword_book_blocklinkedlist_basicinformation"}; // Keyword->index
+  public:
+    BookManager();
+    ~BookManager();
+
+    void setBookManager(std::fstream &totalFile);
+    void recordBookManager(std::fstream &totalFile);
+
+    std::vector<int> findBookName(const std::string &bookname);
+    std::vector<int> findAuthor(const std::string &author);
+    std::vector<int> findKeyword(const std::string &keyword);
+
+    int findBook(const std::string &isbn); // 返回index
+    std::shared_ptr<Book> getBook(int index);
+    std::shared_ptr<Book> getBook(const std::string &isbn);
+    std::string getISBN(int index);
+    double getPrice(int index);
+
+    void changeQuantity(int index, int delta_quantity);
+    void modify(int index, const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double &price);
+    int addBook(const std::string &isbn);
+
+    void printBook(int index);
+    void printall();
+};
