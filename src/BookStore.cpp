@@ -9,8 +9,8 @@
 
 int main()
 {
-    // freopen("../testcases/BasicTestCase-5/5.in", "r", stdin);
-    // freopen("../BookStore.out", "w", stdout);
+    freopen("../testcases/BasicTestCase-5/5.in", "r", stdin);
+    freopen("../BookStore.out", "w", stdout);
 
     std::filesystem::create_directory("../file");
     Program program; 
