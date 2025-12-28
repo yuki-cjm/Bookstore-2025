@@ -27,7 +27,7 @@ class AccountManager {
     int total_account;
     int count_deleted_account;
     std::vector<int> deleted_account; //记录被delete的账户的index
-    BlockLinkedList<30> accountList{"../file/account_blocklinkedlist", "../file/account_blocklinkedlist_basicinformation"}; // userid->index
+    BlockLinkedList<30> accountList{"account_blocklinkedlist", "account_blocklinkedlist_basicinformation"}; // userid->index
 
   public:
     AccountManager();

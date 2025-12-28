@@ -7,33 +7,33 @@
 
 LogManager::LogManager()
 {
-    transactionLogFile.open("../file/transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
+    transactionLogFile.open("transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
     if(!transactionLogFile)
     {
-        transactionLogFile.open("../file/transactionLogFile", std::ios::out | std::ios::binary);
+        transactionLogFile.open("transactionLogFile", std::ios::out | std::ios::binary);
         transactionLogFile.close();
-        transactionLogFile.open("../file/transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
+        transactionLogFile.open("transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
     }
-    operationLogFile.open("../file/operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
+    operationLogFile.open("operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
     if(!operationLogFile)
     {
-        operationLogFile.open("../file/operationLogFile", std::ios::out | std::ios::binary);
+        operationLogFile.open("operationLogFile", std::ios::out | std::ios::binary);
         operationLogFile.close();
-        operationLogFile.open("../file/operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
+        operationLogFile.open("operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
     }
-    financeReportFile.open("../file/financeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+    financeReportFile.open("financeReportFile", std::ios::in | std::ios::out | std::ios::binary);
     if(!financeReportFile)
     {
-        financeReportFile.open("../file/financeReportFile", std::ios::out | std::ios::binary);
+        financeReportFile.open("financeReportFile", std::ios::out | std::ios::binary);
         financeReportFile.close();
-        financeReportFile.open("../file/financeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+        financeReportFile.open("financeReportFile", std::ios::in | std::ios::out | std::ios::binary);
     }
-    employeeReportFile.open("../file/employeeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+    employeeReportFile.open("employeeReportFile", std::ios::in | std::ios::out | std::ios::binary);
     if(!employeeReportFile)
     {
-        employeeReportFile.open("../file/employeeReportFile", std::ios::out | std::ios::binary);
+        employeeReportFile.open("employeeReportFile", std::ios::out | std::ios::binary);
         employeeReportFile.close();
-        employeeReportFile.open("../file/employeeReportFile", std::ios::in | std::ios::out | std::ios::binary);
+        employeeReportFile.open("employeeReportFile", std::ios::in | std::ios::out | std::ios::binary);
     }
     total_transactionlog = 0;
     total_operationlog = 0;

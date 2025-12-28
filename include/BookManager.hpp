@@ -26,10 +26,10 @@ class BookManager
     std::string bookfile_name; //文件路径
     int total_book;
     static const int Booksize = 216;
-    BlockLinkedList<20> ISBN_bookList{"../file/ISBN_book_blocklinkedlist", "../file/ISBN_book_blocklinkedlist_basicinformation"}; // ISBN->index
-    BlockLinkedList<60> BookName_bookList{"../file/BookName_book_blocklinkedlist", "../file/BookName_book_blocklinkedlist_basicinformation"}; // BookName->index
-    BlockLinkedList<60> Author_bookList{"../file/Author_book_blocklinkedlist", "../file/Author_book_blocklinedlist_basicinformation"}; // Author->index
-    BlockLinkedList<60> Keyword_bookList{"../file/Keyword_book_blocklinkedlist", "../file/Keyword_book_blocklinkedlist_basicinformation"}; // Keyword->index
+    BlockLinkedList<20> ISBN_bookList{"ISBN_book_blocklinkedlist", "ISBN_book_blocklinkedlist_basicinformation"}; // ISBN->index
+    BlockLinkedList<60> BookName_bookList{"BookName_book_blocklinkedlist", "BookName_book_blocklinkedlist_basicinformation"}; // BookName->index
+    BlockLinkedList<60> Author_bookList{"Author_book_blocklinkedlist", "Author_book_blocklinedlist_basicinformation"}; // Author->index
+    BlockLinkedList<60> Keyword_bookList{"Keyword_book_blocklinkedlist", "Keyword_book_blocklinkedlist_basicinformation"}; // Keyword->index
     std::map<std::string, int> sorted_index; // isbn->index, sorted by isbn
     
   public:

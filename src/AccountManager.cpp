@@ -15,7 +15,7 @@ void Account::printAccount()
 
 AccountManager::AccountManager()
 {
-    accountfile_name = "../file/AccountFile";
+    accountfile_name = "AccountFile";
     accountFile.open(accountfile_name, std::ios::in | std::ios::out | std::ios::binary);
     if(!accountFile)
     {

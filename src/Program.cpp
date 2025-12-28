@@ -19,12 +19,12 @@
 Program::Program()
 {
     programEnd_ = false;
-    totalFile.open("../file/totalFile", std::ios::in | std::ios::out | std::ios::binary);
+    totalFile.open("totalFile", std::ios::in | std::ios::out | std::ios::binary);
     if(!totalFile)
     {
-        totalFile.open("../file/totalFile", std::ios::out | std::ios::binary);
+        totalFile.open("totalFile", std::ios::out | std::ios::binary);
         totalFile.close();
-        totalFile.open("../file/totalFile", std::ios::in | std::ios::out | std::ios::binary);
+        totalFile.open("totalFile", std::ios::in | std::ios::out | std::ios::binary);
         std::string userid = "root";
         std::string password = "sjtu";
         std::string username = "caojiaming";
@@ -47,7 +47,6 @@ Program::~Program()
     point += bookmanager_.recordBookManager(totalFile, point);
     point += logmanager_.recordLogManager(totalFile, point);
     totalFile.close();
-    // std::filesystem::remove_all("../file");
 }
 
 void Program::sortBook(std::vector<int> &index)
@@ -154,6 +153,8 @@ void Program::Useradd(const std::string &userid, const std::string &password, in
     if(loginStack.back()->privilege_ < 3)
         throw BookstoreError("Invalid");
     if(privilege >= loginStack.back()->privilege_)
+        throw BookstoreError("Invalid");
+    if(privilege != 0 && privilege != 1 && privilege != 3 && privilege != 7)
         throw BookstoreError("Invalid");
     if(accountmanager_.findAccount(userid) != -1)
         throw BookstoreError("Invalid");

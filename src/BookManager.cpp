@@ -10,7 +10,7 @@
 
 BookManager::BookManager()
 {
-    bookfile_name = "../file/BookFile";
+    bookfile_name = "BookFile";
     bookFile.open(bookfile_name, std::ios::in | std::ios::out | std::ios::binary);
     if(!bookFile)
     {
