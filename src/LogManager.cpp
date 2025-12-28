@@ -12,7 +12,7 @@ LogManager::LogManager()
     {
         transactionLogFile.open("../file/transactionLogFile", std::ios::out | std::ios::binary);
         transactionLogFile.close();
-        transactionLogFile.open("../file/transactionLogfile", std::ios::in | std::ios::out | std::ios::binary);
+        transactionLogFile.open("../file/transactionLogFile", std::ios::in | std::ios::out | std::ios::binary);
     }
     operationLogFile.open("../file/operationLogFile", std::ios::in | std::ios::out | std::ios::binary);
     if(!transactionLogFile)
