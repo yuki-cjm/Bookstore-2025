@@ -5,14 +5,13 @@
 #include <algorithm>
 #include <iomanip>
 #include <filesystem>
-#include <cmath>
+
 
 #include "utils/Error.hpp"
 #include "AccountManager.hpp"
 #include "BookManager.hpp"
 #include "LogManager.hpp"
 #include "Program.hpp"
-
 
 
 Program::Program()
@@ -112,7 +111,10 @@ void Program::Logout()
     if(loginStack.empty() || loginStack.back()->privilege_ < 1)
         throw BookstoreError("Invalid");
     loginStack.pop_back();
-    book_index_now = loginStack.back()->book_index;
+    if(loginStack.empty())
+        book_index_now = -1;
+    else
+        book_index_now = loginStack.back()->book_index;
     // printloginStack();
 }
 
@@ -144,9 +146,7 @@ void Program::Passwd(const std::string &userid, const std::string &password1, co
 
 void Program::Useradd(const std::string &userid, const std::string &password, int privilege, const std::string &username)
 {
-    if(loginStack.empty())
-        throw BookstoreError("Invalid");
-    if(loginStack.back()->privilege_ < 3)
+    if(loginStack.empty() || loginStack.back()->privilege_ < 3)
         throw BookstoreError("Invalid");
     if(privilege >= loginStack.back()->privilege_)
         throw BookstoreError("Invalid");
@@ -159,9 +159,7 @@ void Program::Useradd(const std::string &userid, const std::string &password, in
 
 void Program::Delete(const std::string &userid)
 {
-    if(loginStack.empty())
-        throw BookstoreError("Invalid");
-    if(loginStack.back()->privilege_ < 7)
+    if(loginStack.empty() || loginStack.back()->privilege_ < 7)
         throw BookstoreError("Invalid");
     int index = accountmanager_.findAccount(userid);
     if(index == -1)
@@ -235,9 +233,7 @@ void Program::Buy(const std::string &isbn, int quantity)
 
 void Program::Select(const std::string &isbn)
 {
-    if(loginStack.empty())
-        throw BookstoreError("Invalid");
-    if(loginStack.back()->privilege_ < 3)
+    if(loginStack.empty() || loginStack.back()->privilege_ < 3)
         throw BookstoreError("Invalid");
     int index = bookmanager_.findBook(isbn);
     if(index == -1)
@@ -255,9 +251,7 @@ void Program::Select(const std::string &isbn)
 
 void Program::Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price)
 {
-    if(loginStack.empty())
-        throw BookstoreError("Invalid");
-    if(loginStack.back()->privilege_ < 3)
+    if(loginStack.empty() || loginStack.back()->privilege_ < 3)
         throw BookstoreError("Invalid");
     if(book_index_now == -1)
         throw BookstoreError("Invalid");
@@ -266,9 +260,7 @@ void Program::Modify(const std::string &isbn, const std::string &bookname, const
 
 void Program::Import(int quantity, double totalcost)
 {
-    if(loginStack.empty())
-        throw BookstoreError("Invalid");
-    if(loginStack.back()->privilege_ < 3)
+    if(loginStack.empty() || loginStack.back()->privilege_ < 3)
         throw BookstoreError("Invalid");
     if(book_index_now == -1)
         throw BookstoreError("Invalid");
@@ -278,9 +270,7 @@ void Program::Import(int quantity, double totalcost)
 
 void Program::ShowFinance(int count)
 {
-    if(loginStack.empty())
-        throw BookstoreError("Invalid");
-    if(loginStack.back()->privilege_ < 7)
+    if(loginStack.empty() || loginStack.back()->privilege_ < 7)
         throw BookstoreError("Invalid");
     logmanager_.showTransaction(count);
 }
