@@ -38,11 +38,15 @@ int stringtoint(const std::string &quantity)
     int number{};
     for(int i = 0; i < quantity.length(); i++)
         number = number * 10 + (quantity[i] - '0');
+    if(number != 0 && quantity[0] == '0')
+        throw BookstoreError("Invalid");
     return number;
 }
 
 double stringtodouble(const std::string &price)
 {
+    if(price.length() >= 2 && price[0] == '0' && price[1] != '.')
+        throw BookstoreError("Invalid");
     double number{};
     int point = 0, count = 1;
     for(int i = 0; i < price.length(); i++)
