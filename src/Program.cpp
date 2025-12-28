@@ -150,7 +150,7 @@ void Program::Useradd(const std::string &userid, const std::string &password, in
         throw BookstoreError("Invalid");
     if(privilege >= loginStack.back()->privilege_)
         throw BookstoreError("Invalid");
-    if(privilege != 0 && privilege != 1 && privilege != 3 && privilege != 7)
+    if(privilege != 1 && privilege != 3 && privilege != 7)
         throw BookstoreError("Invalid");
     if(accountmanager_.findAccount(userid) != -1)
         throw BookstoreError("Invalid");
