@@ -93,6 +93,11 @@ void LogManager::addTransactionLog(double finance)
 
 void LogManager::showTransaction(int count)
 {
+    if(count == 0)
+    {
+        std::cout << '\n';
+        return;
+    }
     double temp_income, temp_expenditure;
     for(int i = 0; i < total_transactionlog; i++)
     {
