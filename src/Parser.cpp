@@ -426,7 +426,7 @@ void Parser::parseImport(int &pointer, const std::string &line, Program *program
         throw BookstoreError("Invalid");
     str = getword(pointer, line, 8);
     totalcost = stringtodouble(str);
-    if(!(totalcost > 1e-6))  // It's possible to make mistakes.
+    if(!(totalcost > 0))
         throw BookstoreError("Invalid");
     str= getword(pointer, line);
     if(!str.empty())
