@@ -112,6 +112,8 @@ std::string getword(int &pointer, const std::string &line, int type = 0)
     || type == 7 && temp.length() > 10
     || type == 8 && temp.length() > 13)
         throw BookstoreError("Invalid");
+    if(type == 7 && temp.length() == 10 && temp > "2147483647")
+        throw BookstoreError("Invalid");
     return temp;
 }
 
