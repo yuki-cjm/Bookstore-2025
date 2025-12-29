@@ -118,6 +118,8 @@ std::shared_ptr<Book> BookManager::getBook(int index)
 std::shared_ptr<Book> BookManager::getBook(const std::string &isbn)
 {
     int index = findBook(isbn);
+    if(index == -1)
+        return nullptr;
     return getBook(index);
 }
 
@@ -197,7 +199,7 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
         bookFile.seekg(Booksize * index + 82);
         bookFile.read(temp, 61);
         std::string author_ = std::string(temp);
-        if(!author.empty())
+        if(!author_.empty())
             Author_bookList.Delete(author_, index);
         bookFile.clear();
         bookFile.seekp(Booksize * index + 82);
