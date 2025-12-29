@@ -161,6 +161,8 @@ void Parser::parseExit(int &pointer, const std::string &line, Program *program)
 void Parser::parseSu(int &pointer, const std::string &line, Program *program)
 {
     std::string UserID = getword(pointer, line, 1);
+    if(UserID.empty())
+        throw BookstoreError("Invalid");
     std::string Password = getword(pointer, line, 1);
     std::string str = getword(pointer, line);
     if(!str.empty())
@@ -209,6 +211,8 @@ void Parser::parseUseradd(int &pointer, const std::string &line, Program *progra
     std::string Password = getword(pointer, line, 1);
     std::string Privilege = getword(pointer, line, 3);
     std::string Username = getword(pointer, line, 2);
+    if(Username.empty())
+        throw BookstoreError("Invalid");
     std::string str = getword(pointer, line);
     if(str.empty())
         program->Useradd(UserID, Password, Privilege[0] - '0', Username);
@@ -219,6 +223,8 @@ void Parser::parseUseradd(int &pointer, const std::string &line, Program *progra
 void Parser::parseDelete(int &pointer, const std::string &line, Program *program)
 {
     std::string UserID = getword(pointer, line, 1);
+    if(UserID.empty())
+        throw BookstoreError("Invalid");
     std::string str = getword(pointer, line);
     if(str.empty())
         program->Delete(UserID);
@@ -309,6 +315,8 @@ void Parser::parseBuy(int &pointer, const std::string &line, Program *program)
 {
     std::string isbn = getword(pointer, line, 4);
     std::string quantity = getword(pointer, line, 7);
+    if(quantity.empty())
+        throw BookstoreError("Invalid");
     std::string str = getword(pointer, line);
     if(!str.empty())
         throw BookstoreError("Invalid");
@@ -321,6 +329,8 @@ void Parser::parseBuy(int &pointer, const std::string &line, Program *program)
 void Parser::parseSelect(int &pointer, const std::string &line, Program *program)
 {
     std::string isbn = getword(pointer, line, 4);
+    if(isbn.empty())
+        throw BookstoreError("Invalid");
     std::string str = getword(pointer, line);
     if(!str.empty())
         throw BookstoreError("Invalid");
@@ -427,10 +437,14 @@ void Parser::parseImport(int &pointer, const std::string &line, Program *program
     int quantity;
     double totalcost;
     str = getword(pointer, line, 7);
+    if(str.empty())
+        throw BookstoreError("Invalid");
     quantity = stringtoint(str);
     if(!(quantity > 0))
         throw BookstoreError("Invalid");
     str = getword(pointer, line, 8);
+    if(str.empty())
+        throw BookstoreError("Invalid");
     totalcost = stringtodouble(str);
     if(!(totalcost > 0))
         throw BookstoreError("Invalid");

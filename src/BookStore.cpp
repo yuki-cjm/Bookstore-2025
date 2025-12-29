@@ -1,6 +1,5 @@
 #include <iostream>
 #include <string>
-#include <filesystem>
 
 #include "utils/Error.hpp"
 #include "Parser.hpp"
@@ -12,7 +11,7 @@ int main()
     // freopen("../testcases/ComplexTestCase-3/180.in", "r", stdin);
     // freopen("../BookStore.out", "w", stdout);
 
-    Program program; 
+    Program program;
     std::string line;
     while(program.programRun() && std::getline(std::cin, line))
     {
