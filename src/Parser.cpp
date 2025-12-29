@@ -84,7 +84,7 @@ std::string getword(int &pointer, const std::string &line, int type = 0)
 {
     std::string temp{""};
     // 去除前导空格
-    while(std::isspace(static_cast<int>(line[pointer])) && pointer < line.length())
+    while(line[pointer] == ' ' && pointer < line.length())
         pointer++;
 
     // 获得第一个单词
