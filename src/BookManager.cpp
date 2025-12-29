@@ -146,8 +146,6 @@ void BookManager::changeQuantity(int index, int delta_quantity)
     int quantity;
     bookFile.read(reinterpret_cast<char*>(&quantity), 4);
     quantity += delta_quantity;
-    if(quantity < 0)
-        throw BookstoreError("Invalid");
     bookFile.seekp(Booksize * index + 204);
     bookFile.write(reinterpret_cast<char*>(&quantity), 4);
 }
