@@ -98,14 +98,6 @@ void LogManager::showTransaction(int count)
         std::cout << '\n';
         return;
     }
-    double temp_income, temp_expenditure;
-    for(int i = 0; i < total_transactionlog; i++)
-    {
-        transactionLogFile.clear();
-        transactionLogFile.seekg(i * transactionlogsize);
-        transactionLogFile.read(reinterpret_cast<char*>(&temp_income), 8);
-        transactionLogFile.read(reinterpret_cast<char*>(&temp_expenditure), 8);
-    }
     if(count > total_transactionlog)
         throw BookstoreError("Invalid");
     double income = 0, expenditure = 0;
