@@ -249,13 +249,13 @@ void Program::Select(const std::string &isbn)
     }
 }
 
-void Program::Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price)
+void Program::Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price, bool has_price)
 {
     if(loginStack.empty() || loginStack.back()->privilege_ < 3)
         throw BookstoreError("Invalid");
     if(book_index_now == -1)
         throw BookstoreError("Invalid");
-    bookmanager_.modify(book_index_now, isbn, bookname, author, keyword, keywords, price);
+    bookmanager_.modify(book_index_now, isbn, bookname, author, keyword, keywords, price, has_price);
 }
 
 void Program::Import(int quantity, double totalcost)

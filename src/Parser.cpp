@@ -428,7 +428,7 @@ void Parser::parseModify(int &pointer, const std::string &line, Program *program
         else
             throw BookstoreError("Invalid");
     }
-    program->Modify(isbn, bookname, author, keyword, keywords, price);
+    program->Modify(isbn, bookname, author, keyword, keywords, price, getprice);
 }
 
 void Parser::parseImport(int &pointer, const std::string &line, Program *program)

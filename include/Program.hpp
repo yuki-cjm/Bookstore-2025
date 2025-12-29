@@ -59,7 +59,7 @@ public:
     void Show(Token type, const std::string &content);
     void Buy(const std::string &isbn, int quantity);
     void Select(const std::string &isbn);
-    void Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price);
+    void Modify(const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double price, bool has_price);
     void Import(int quantity, double totalcost);
 
     void ShowFinance(int count);

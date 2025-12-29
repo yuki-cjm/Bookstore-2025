@@ -50,7 +50,7 @@ class BookManager
     double getPrice(int index);
 
     void changeQuantity(int index, int delta_quantity);
-    void modify(int index, const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double &price);
+    void modify(int index, const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double &price, bool has_price);
     int addBook(const std::string &isbn);
 
     void printBook(int index);

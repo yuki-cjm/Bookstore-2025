@@ -152,7 +152,7 @@ void BookManager::changeQuantity(int index, int delta_quantity)
     bookFile.write(reinterpret_cast<char*>(&quantity), 4);
 }
 
-void BookManager::modify(int index, const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double &price)
+void BookManager::modify(int index, const std::string &isbn, const std::string &bookname, const std::string &author, const std::string &keyword, std::vector<std::string> &keywords, double &price, bool has_price)
 {
     bookFile.clear();
     if(!isbn.empty())
@@ -243,7 +243,7 @@ void BookManager::modify(int index, const std::string &isbn, const std::string &
         for(auto &&element : keywords)
             Keyword_bookList.Insert(element,  index);
     }
-    if(price > 1e-6)
+    if(has_price)
     {
         bookFile.seekp(Booksize * index + 208);
         bookFile.write(reinterpret_cast<char*>(&price), 8);
