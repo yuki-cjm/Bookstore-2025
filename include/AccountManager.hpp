@@ -8,7 +8,8 @@
 #include "BlockLinkedList.h"
 #include "BookManager.hpp"
 
-struct Account {
+struct Account
+{
     int index;
     std::string username_;
     std::string userID_;
@@ -19,7 +20,8 @@ struct Account {
     void printAccount();
 };
 
-class AccountManager {
+class AccountManager
+{
   private:
     static const int Accountsize = 97;
     std::fstream accountFile; // index->Account
