@@ -456,10 +456,30 @@ void Parser::parseImport(int &pointer, const std::string &line, Program *program
 
 void Parser::parseLog(int &pointer, const std::string &line, Program *program)
 {
-
+    std::string str = getword(pointer, line);
+    if(!str.empty())
+        throw BookstoreError("Invalid");
+    program->ReportOperation();
 }
 
 void Parser::parseReport(int &pointer, const std::string &line, Program *program)
 {
-    
+    std::string str;
+    str = getword(pointer, line);
+    if(str == "finance")
+    {
+        str = getword(pointer, line);
+        if(!str.empty())
+            throw BookstoreError("Invalid");
+        program->ReportFinance();
+    }
+    else if(str == "employee")
+    {
+        str = getword(pointer, line);
+        if(!str.empty())
+            throw BookstoreError("Invalid");
+        program->ReportEmployee();
+    }
+    else
+        throw BookstoreError("Invalid");
 }

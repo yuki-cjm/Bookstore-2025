@@ -63,4 +63,7 @@ public:
     void Import(int quantity, double totalcost);
 
     void ShowFinance(int count);
+    void ReportFinance();
+    void ReportEmployee();
+    void ReportOperation();
 };
